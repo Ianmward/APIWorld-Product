@@ -53,6 +53,12 @@ pipeline {
         stage('Startup') {
             failFast true
             parallel {
+                stage('Get Version Number') {
+                    steps {
+                        echo 'Get Version Number'
+                        load 'versionInput.groovy'
+                    }
+                }
                 stage('Setup') {
                     steps {
                         container("docker") {
@@ -66,14 +72,7 @@ docker stop ordermg || true
 docker stop productmg || true
 docker stop customermg || true
 '''
-                            echo sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
                         }
-                    }
-                }
-                stage('Get Version Number') {
-                    steps {
-                        echo 'Get Version Number'
-                        load 'versionInput.groovy'
                     }
                 }
             }
