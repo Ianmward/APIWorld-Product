@@ -65,12 +65,10 @@ pipeline {
                             echo "Cleanup"
                             sh '''
 docker ps
-docker stop orderservicems || true
 docker stop productservicems || true
-docker stop customerservicems || true
-docker stop ordermg || true
+docker rm productservicems || true
 docker stop productmg || true
-docker stop customermg || true
+docker rm productmg || true
 '''
                         }
                     }
