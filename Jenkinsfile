@@ -146,7 +146,7 @@ cd /opt/softwareag/Microgateway
 cp $WORKSPACE/microgateway/Dockerfile ./Dockerfile
 mkdir tmp-docker
 cp $WORKSPACE/microgateway/tmp-docker/* tmp-docker
-docker build -t productservice:$VERSION --build-arg PORT=8090 --build-arg JAR_FILE=service.jar .
+docker build -t productmg:$VERSION .
 '''
                 }
             }
