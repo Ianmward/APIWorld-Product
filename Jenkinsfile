@@ -151,34 +151,25 @@ docker build -t productservice:$VERSION --build-arg PORT=8090 --build-arg JAR_FI
                 }
             }
         }
-        stage('Parallel Stage') {
-            when {
-                branch 'master'
-            }
+        stage('Deployment') {
             failFast true
             parallel {
-                stage('Branch A') {
+                stage('Start MicroSvc') {
                     steps {
-                        echo "On Branch A"
+                        container('docker') {
+                            sh '''
+#Run the container read for testing
+docker run --rm --name productservicems -d -p 8090:8090 productservice:$VERSION
+'''
                     }
                 }
-                stage('Branch B') {
+                stage('Start MicroGW') {
                     steps {
-                        echo "On Branch B"
-                    }
-                }
-                stage('Branch C') {
-                    stages {
-                        stage('Nested 1') {
-                            steps {
-                                echo "In stage Nested 1 within Branch C"
-                            }
-                        }
-                        stage('Nested 2') {
-                            steps {
-                                echo "In stage Nested 2 within Branch C"
-                            }
-                        }
+                        container('docker') {
+                            sh '''
+#Run MicroGateway Container
+docker run --rm --name productmg -d -p 9090:9090 --net=host productmg:$VERSION
+'''
                     }
                 }
             }
