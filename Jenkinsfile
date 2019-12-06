@@ -53,10 +53,21 @@ pipeline {
         stage('Startup') {
             failFast true
             parallel {
-                stage('Checkout') {
+                stage('Setup') {
                     steps {
-                        echo "Chekout"
-                        echo sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                        container("docker") {
+                            echo "Cleanup"
+                            sh '''
+docker ps
+docker stop orderservicems || true
+docker stop productservicems || true
+docker stop customerservicems || true
+docker stop ordermg || true
+docker stop productmg || true
+docker stop customermg || true
+'''
+                            echo sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                        }
                     }
                 }
                 stage('Get Version Number') {
@@ -154,6 +165,16 @@ docker build -t productmg:$VERSION .
         stage('Deployment') {
             failFast true
             parallel {
+                stage('Start MicroGW') {
+                    steps {
+                        container('docker') {
+                            sh '''
+#Run MicroGateway Container
+docker run --rm --name productmg -d -p 9090:9090 --net=host productmg:$VERSION
+'''
+                        }
+                    }
+                }
                 stage('Start MicroSvc') {
                     steps {
                         container('docker') {
@@ -164,7 +185,22 @@ docker run --rm --name productservicems -d -p 8090:8090 productservice:$VERSION
                         }
                     }
                 }
-                stage('Start MicroGW') {
+            }
+        }
+        stage('Test Operational') {
+            failFast true
+            parallel {
+                stage('Test MicroGW Operational') {
+                    steps {
+                        container('docker') {
+                            sh '''
+#Run the container read for testing
+docker run --rm --name productservicems -d -p 8090:8090 productservice:$VERSION
+'''
+                        }
+                    }
+                }
+                stage('Test MicroSvc Operational') {
                     steps {
                         container('docker') {
                             sh '''
