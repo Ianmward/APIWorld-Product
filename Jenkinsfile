@@ -189,22 +189,18 @@ docker run --rm --name productservicems -d -p 8090:8090 productservice:$VERSION
             parallel {
                 stage('Test MicroGW Operational') {
                     steps {
-                        container('docker') {
-                            sh '''
+                        sh '''
 #Are services operational
 timeout 60 bash -c \'while [[ "$(curl -s -o /dev/null -w \'\'%{http_code}\'\' localhost:8090/product)" != "200" ]]; do sleep 5; done\' || false
 '''
-                        }
                     }
                 }
                 stage('Test MicroSvc Operational') {
                     steps {
-                        container('docker') {
-                            sh '''
+                        sh '''
 #Is MicroGW Operational
 timeout 60 bash -c \'while [[ "$(curl -s -o /dev/null -w \'\'%{http_code}\'\' localhost:9090/gateway/Product/1.0/product)" != "200" ]]; do sleep 5; done\' || false
 '''
-                        }
                     }
                 }
             }
