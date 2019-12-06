@@ -191,8 +191,8 @@ docker run --rm --name productservicems -d -p 8090:8090 productservice:$VERSION
                     steps {
                         container('docker') {
                             sh '''
-#Run the container read for testing
-docker run --rm --name productservicems -d -p 8090:8090 productservice:$VERSION
+#Are services operational
+timeout 60 bash -c \'while [[ "$(curl -s -o /dev/null -w \'\'%{http_code}\'\' localhost:8090/product)" != "200" ]]; do sleep 5; done\' || false
 '''
                         }
                     }
@@ -201,8 +201,8 @@ docker run --rm --name productservicems -d -p 8090:8090 productservice:$VERSION
                     steps {
                         container('docker') {
                             sh '''
-#Run MicroGateway Container
-docker run --rm --name productmg -d -p 9090:9090 --net=host productmg:$VERSION
+#Is MicroGW Operational
+timeout 60 bash -c \'while [[ "$(curl -s -o /dev/null -w \'\'%{http_code}\'\' localhost:9090/gateway/Product/1.0/product)" != "200" ]]; do sleep 5; done\' || false
 '''
                         }
                     }
