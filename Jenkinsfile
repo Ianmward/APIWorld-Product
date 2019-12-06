@@ -161,6 +161,7 @@ docker build -t productservice:$VERSION --build-arg PORT=8090 --build-arg JAR_FI
 #Run the container read for testing
 docker run --rm --name productservicems -d -p 8090:8090 productservice:$VERSION
 '''
+                        }
                     }
                 }
                 stage('Start MicroGW') {
@@ -170,6 +171,7 @@ docker run --rm --name productservicems -d -p 8090:8090 productservice:$VERSION
 #Run MicroGateway Container
 docker run --rm --name productmg -d -p 9090:9090 --net=host productmg:$VERSION
 '''
+                        }
                     }
                 }
             }
