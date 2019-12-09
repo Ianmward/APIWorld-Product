@@ -22,6 +22,32 @@ echo "GIT_BRANCH : $GIT_BRANCH"
 echo ---------------------------------------------------------------------------
 '''
             sh '''echo "Clean Microservice Containers"
+
+docker stop orderservicems || true
+docker stop productservicems || true
+docker stop customerservicems || true
+
+docker stop ordermg || true
+docker stop productmg || true
+docker stop customermg || true
+
+echo "Clean Test Containers"
+
+
+sleep 1
+
+runningCount=`docker ps -a -q --filter ancestor=jmeter:latest | wc -l`
+
+if [ $runningCount -gt 0 ]; then
+   docker stop $(docker ps -a -q --filter ancestor=jmeter:latest --format="{{.ID}}") > /dev/nul
+else
+   echo "No Jmeter Containers running"
+fi
+
+echo "Clean Build Assets"
+rm -rf target
+rm -rf jmeter
+
 '''
           }
         }
