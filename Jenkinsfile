@@ -191,8 +191,8 @@ docker run --rm --name productservicems -d -p 8090:8090 productservice:$VERSION
                     steps {
                         container('mg-jenkins') {
                             sh '''
-#Are services operational
-timeout 60 bash -c \'while [[ "$(curl -s -o /dev/null -w \'\'%{http_code}\'\' localhost:8090/product)" != "200" ]]; do sleep 5; done\' || false
+#Is MicroGW Operational
+timeout 60 bash -c \'while [[ "$(curl -s -o /dev/null -w \'\'%{http_code}\'\' localhost:9090/gateway/Product/1.0/product)" != "200" ]]; do sleep 5; done\' || false
 '''
                         }
                     }
@@ -201,8 +201,8 @@ timeout 60 bash -c \'while [[ "$(curl -s -o /dev/null -w \'\'%{http_code}\'\' lo
                     steps {
                         container('mg-jenkins') {
                             sh '''
-#Is MicroGW Operational
-timeout 60 bash -c \'while [[ "$(curl -s -o /dev/null -w \'\'%{http_code}\'\' localhost:9090/gateway/Product/1.0/product)" != "200" ]]; do sleep 5; done\' || false
+#Are services operational
+timeout 60 bash -c \'while [[ "$(curl -s -o /dev/null -w \'\'%{http_code}\'\' localhost:8090/product)" != "200" ]]; do sleep 5; done\' || false
 '''
                         }
                     }
