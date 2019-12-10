@@ -77,23 +77,19 @@ podTemplate(label: label,
     def repository
 
     stage('Test MicroGW Operational') {
-        steps {
-            container('mg-jenkins') {
-                sh '''
+        container('mg-jenkins') {
+            sh '''
 #Is MicroGW Operational
 timeout 60 bash -c \'while [[ "$(curl -s -o /dev/null -w \'\'%{http_code}\'\' localhost:9090/gateway/Product/1.0/product)" != "200" ]]; do sleep 5; done\' || false
 '''
-            }
         }
     }
     stage('Test MicroSvc Operational') {
-        steps {
-            container('mg-jenkins') {
-                sh '''
+        container('mg-jenkins') {
+            sh '''
 #Are services operational
 timeout 60 bash -c \'while [[ "$(curl -s -o /dev/null -w \'\'%{http_code}\'\' localhost:8090/product)" != "200" ]]; do sleep 5; done\' || false
 '''
-            }
         }
     }
   }
