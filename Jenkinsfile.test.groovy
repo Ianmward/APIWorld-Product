@@ -1,7 +1,7 @@
 def label = "mypod-${UUID.randomUUID().toString()}"
 properties([
   parameters([
-    string(name: 'VERSION', defaultValue: 'ci', description: 'The target VERSION' )
+    string(name: 'VERSION', defaultValue: 'ci', description: 'The target VERSION' ),
     string(name: 'GIT_BRANCH', defaultValue: 'development', description: 'The target GIT_BRANCH' )
   ])
 ])
