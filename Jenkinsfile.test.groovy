@@ -88,5 +88,39 @@ timeout 60 bash -c \'while [[ "$(curl -s -o /dev/null -w \'\'%{http_code}\'\' lo
 '''
         }
     }
+    stage('Unit Test') {
+        container('mg-jenkins') {
+          sh '''#Unit Test Microservice
+echo "Unit Test Microservice"
+mvn test'''
+    }
+    stage('Interface Test') {
+        container('mg-jenkins') {
+          echo 'Test Microservice'
+          sh '''#Test Microservice
+curl http://localhost:8090/product/1
+test=`curl -s http://localhost:8090/product/1 | grep foo | wc -l`
+
+
+if [ $test -gt 0 ]; then
+echo "Test Passed"
+else
+echo "Error in interface test for MicroService"
+exit 1
+fi'''
+          echo 'Test Gateway'
+          sh '''#Test Gateway
+
+test=`curl -s http://localhost:9090/gateway/Product/1.0/product/1 | grep foo | wc -l`
+
+
+if [ $test -gt 0 ]; then
+echo "Test Passed"
+else
+echo "Error in interface test for MicroGateway"
+exit 1
+fi'''
+      }
+
   }
 }
