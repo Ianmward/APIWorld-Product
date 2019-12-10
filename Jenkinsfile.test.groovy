@@ -89,7 +89,7 @@ timeout 60 bash -c \'while [[ "$(curl -s -o /dev/null -w \'\'%{http_code}\'\' lo
         }
     }
     stage('Unit Test') {
-        container('mg-jenkins') {
+        container('maven') {
           sh '''#Unit Test Microservice
 echo "Unit Test Microservice"
 mvn test'''
