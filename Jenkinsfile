@@ -159,54 +159,13 @@ docker build -t productmg:$VERSION .
                 }
             }
         }
-        stage('Deployment') {
+        stage('Test') {
             failFast true
-            parallel {
-                stage('Start MicroGW') {
-                    steps {
-                        container('docker') {
-                            sh '''
-#Run MicroGateway Container
-docker run --rm --name productmg -d -p 9090:9090 --net=host productmg:$VERSION
-'''
-                        }
-                    }
-                }
-                stage('Start MicroSvc') {
-                    steps {
-                        container('docker') {
-                            sh '''
-#Run the container read for testing
-docker run --rm --name productservicems -d -p 8090:8090 productservice:$VERSION
-'''
-                        }
-                    }
-                }
-            }
-        }
-        stage('Test Operational') {
-            failFast true
-            parallel {
-                stage('Test MicroGW Operational') {
-                    steps {
-                        container('mg-jenkins') {
-                            sh '''
-#Is MicroGW Operational
-timeout 60 bash -c \'while [[ "$(curl -s -o /dev/null -w \'\'%{http_code}\'\' localhost:9090/gateway/Product/1.0/product)" != "200" ]]; do sleep 5; done\' || false
-'''
-                        }
-                    }
-                }
-                stage('Test MicroSvc Operational') {
-                    steps {
-                        container('mg-jenkins') {
-                            sh '''
-#Are services operational
-timeout 60 bash -c \'while [[ "$(curl -s -o /dev/null -w \'\'%{http_code}\'\' localhost:8090/product)" != "200" ]]; do sleep 5; done\' || false
-'''
-                        }
-                    }
-                }
+            steps {
+                build job: 'APIWorld-Product-Test', parameters: [
+                    string(name: 'VERSION', value: $VERSION),
+                    string(name: 'GIT_BRANCH', value: $GIT_BRANCH)
+                ]
             }
         }
     }
