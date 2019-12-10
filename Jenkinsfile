@@ -163,8 +163,6 @@ docker build -t productmg:$VERSION .
             failFast true
             steps {
                 build job: 'APIWorld-Product-Test/'+$GIT_BRANCH, parameters: [[$class: 'StringParameterValue', name: 'VERSION', value: "$VERSION"]]
-
-                ]
             }
         }
     }
