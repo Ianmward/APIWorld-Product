@@ -35,6 +35,11 @@ podTemplate(label: label,
       volumeMounts:
       - mountPath: /var/run/docker.sock
         name: docker-sock-volume
+    - name: maven
+      image: maven:3.3.9-jdk-8-alpine
+      command:
+      - cat
+      tty: true
     - name: docker
       image: docker.devopsinitiative.com/mg-jenkins:10.5.0.3-root
       securityContext:
