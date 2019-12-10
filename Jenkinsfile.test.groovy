@@ -23,13 +23,9 @@ podTemplate(label: label,
     containers:
     - name: productmg
       image: productmg:$VERSION
-      command:
-      - cat
       tty: true
     - name: productservicems
       image: productservice:$VERSION
-      command:
-      - cat
       tty: true
     - name: mg-jenkins
       image: docker.devopsinitiative.com/mg-jenkins:10.5.0.4
