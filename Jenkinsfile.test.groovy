@@ -39,6 +39,15 @@ podTemplate(label: label,
       volumeMounts:
       - mountPath: /var/run/docker.sock
         name: docker-sock-volume
+    volumes:
+    - name: docker-sock-volume
+      hostPath:
+        # location on host
+        path: /var/run/docker.sock
+        # this field is optional
+        type: File
+    imagePullSecrets:
+    - name: regcred
 """
 ) {
   node(label) {
