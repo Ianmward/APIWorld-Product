@@ -50,6 +50,12 @@ pipeline {
     }
   }
   stages {
+        stage('PreTest') {
+            failFast true
+            steps {
+                build job: 'APIWorld-Product-Test/'+${GIT_BRANCH}, parameters: [[$class: 'StringParameterValue', name: 'VERSION', value: "$VERSION"]]
+            }
+        }
         stage('Startup') {
             failFast true
             parallel {
@@ -162,7 +168,7 @@ docker build -t productmg:$VERSION .
         stage('Test') {
             failFast true
             steps {
-                build job: 'APIWorld-Product-Test/'+$GIT_BRANCH, parameters: [[$class: 'StringParameterValue', name: 'VERSION', value: "$VERSION"]]
+                build job: 'APIWorld-Product-Test/'+${GIT_BRANCH}, parameters: [[$class: 'StringParameterValue', name: 'VERSION', value: "$VERSION"]]
             }
         }
     }
