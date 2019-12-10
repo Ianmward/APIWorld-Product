@@ -80,6 +80,11 @@ docker rm productmg || true
             parallel {
                 stage('Microservice') {
                     steps {
+                        kubernetes.pod('buildpod').withImage('maven').inside {
+                            //for a single container you can avoid the .withNewContainer() thing.
+                            sh 'mvn compile'
+                        }
+
                         container('maven') {
                             echo 'Build Project'
                             sh '''
@@ -163,6 +168,29 @@ docker build -t productmg:$VERSION .
             failFast true
             steps {
                 build job: "APIWorld-Product-Test/$GIT_BRANCH", parameters: [[$class: 'StringParameterValue', name: 'VERSION', value: "$VERSION"]]
+            }
+        }
+        stage('Register Images') {
+            when {
+                anyOf {
+                branch 'staging'
+                branch 'master'
+                }
+
+            }
+            steps {
+                container('docker') {
+                    sh '''#push image to registry
+
+#First tag
+docker tag productservice:$VERSION docker.devopsinitiative.com/productservice:$VERSION
+docker tag productmg:$VERSION docker.devopsinitiative.com/productmg:$VERSION
+
+#second push 
+docker push docker.devopsinitiative.com/productservice:$VERSION
+docker push docker.devopsinitiative.com/productmg:$VERSION
+'''
+                }
             }
         }
     }
