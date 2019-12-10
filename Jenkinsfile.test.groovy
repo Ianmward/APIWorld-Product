@@ -39,6 +39,17 @@ podTemplate(label: label,
       volumeMounts:
       - mountPath: /var/run/docker.sock
         name: docker-sock-volume
+    - name: docker
+      image: docker.devopsinitiative.com/mg-jenkins:10.5.0.3-root
+      securityContext:
+        runAsUser: 0
+        fsGroup: 0
+      command:
+      - cat
+      tty: true
+      volumeMounts:
+      - mountPath: /var/run/docker.sock
+        name: docker-sock-volume
     volumes:
     - name: docker-sock-volume
       hostPath:
