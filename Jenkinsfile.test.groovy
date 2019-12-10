@@ -121,6 +121,7 @@ echo "Error in interface test for MicroGateway"
 exit 1
 fi'''
       }
+    }
 
   }
 }
