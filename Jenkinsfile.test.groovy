@@ -1,8 +1,7 @@
 def label = "mypod-${UUID.randomUUID().toString()}"
 properties([
   parameters([
-    string(name: 'VERSION', defaultValue: 'ci', description: 'The target VERSION' ),
-    string(name: 'GIT_BRANCH', defaultValue: 'development', description: 'The target GIT_BRANCH' )
+    string(name: 'VERSION', defaultValue: 'ci', description: 'The target VERSION' )
   ])
 ])
 podTemplate(label: label, 
@@ -73,9 +72,7 @@ podTemplate(label: label,
 			}
 		}
     stage ('Extract') {
-        checkout([$class: 'GitSCM',
-            branches: [[name: '*/'+$GIT_BRANCH]]
-        ])
+        checkout scm
         commitId = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
     }
     def repository
