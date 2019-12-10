@@ -2,7 +2,7 @@ def label = "mypod-${UUID.randomUUID().toString()}"
 podTemplate(label: label, 
   properties([
     parameters([
-      string(name: 'VERSION', defaultValue: 'ci', description: 'The target VERSION', )
+      string(name: 'VERSION', defaultValue: 'ci', description: 'The target VERSION' )
     ])
   ]),
   envVars: [
