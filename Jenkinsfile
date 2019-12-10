@@ -53,7 +53,7 @@ pipeline {
         stage('PreTest') {
             failFast true
             steps {
-                build job: 'APIWorld-Product-Test/'+${GIT_BRANCH}, parameters: [[$class: 'StringParameterValue', name: 'VERSION', value: "$VERSION"]]
+                build job: "APIWorld-Product-Test/$GIT_BRANCH", parameters: [[$class: 'StringParameterValue', name: 'VERSION', value: "$VERSION"]]
             }
         }
         stage('Startup') {
