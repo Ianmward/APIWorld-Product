@@ -1,10 +1,10 @@
 def label = "mypod-${UUID.randomUUID().toString()}"
+properties([
+  parameters([
+    string(name: 'VERSION', defaultValue: 'ci', description: 'The target VERSION' )
+  ])
+])
 podTemplate(label: label, 
-  properties([
-    parameters([
-      string(name: 'VERSION', defaultValue: 'ci', description: 'The target VERSION' )
-    ])
-  ]),
   envVars: [
     secretEnvVar(key: 'DOCKER_USR', secretName: 'docker-store-cred', secretKey: 'username'),
     secretEnvVar(key: 'DOCKER_PSW', secretName: 'docker-store-cred', secretKey: 'password'),
